@@ -48,12 +48,12 @@ const DIMENSIONES = [
 ];
 
 const SCORES = [
-  { label: "Plataformas de gestión",        avg: 2.7, nota: "El score más crítico del diagnóstico"              },
-  { label: "Documentación del conocimiento", avg: 3.7, nota: "Se pierde en Drive y reuniones sin documentar"     },
-  { label: "Visibilidad del avance",         avg: 4.0, nota: "Brecha entre percepción de dirección y equipo"     },
-  { label: "Gestión interna ordenada",       avg: 4.3, nota: "Margen de mejora concreto"                         },
-  { label: "Necesidad de Notion",            avg: 6.0, nota: "Alta coincidencia — dos respuestas al máximo (7)"  },
-  { label: "Urgencia: tech en productos",    avg: 6.7, nota: "Score más alto del formulario"                     },
+  { label: "Plataformas de gestión",        avg: 2.7, nota: "El score más crítico del diagnóstico",             invert: false },
+  { label: "Documentación del conocimiento", avg: 3.7, nota: "Se pierde en Drive y reuniones sin documentar",    invert: false },
+  { label: "Visibilidad del avance",         avg: 4.0, nota: "Brecha entre percepción de dirección y equipo",    invert: false },
+  { label: "Gestión interna ordenada",       avg: 4.3, nota: "Margen de mejora concreto",                        invert: false },
+  { label: "Necesidad de Notion",            avg: 6.0, nota: "Alta coincidencia — dos respuestas al máximo (7)", invert: true  },
+  { label: "Urgencia: tech en productos",    avg: 6.7, nota: "Score más alto del formulario",                    invert: true, color: "#D94F3D" },
 ];
 
 const VOCES = [
@@ -229,22 +229,26 @@ export default function Diagnostico() {
             Métricas clave (escala 1–7, promedio de 3 respuestas)
           </div>
           <div style={{ background: "var(--white)", border: "1px solid var(--gray-100)", borderRadius: 16, padding: "28px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
-            {SCORES.map((s) => (
+            {SCORES.map((s) => {
+              const display = s.invert ? 8 - s.avg : s.avg;
+              const barColor = s.color ?? scoreColor(display);
+              return (
               <div key={s.label}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 13.5, fontWeight: 600, color: "var(--gd-dark)" }}>{s.label}</span>
                     <span style={{ fontSize: 11, color: "var(--gray-400)" }}>— {s.nota}</span>
                   </div>
-                  <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(s.avg), minWidth: 32, textAlign: "right" }}>
-                    {s.avg.toFixed(1)}
+                  <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(display), minWidth: 32, textAlign: "right" }}>
+                    {display.toFixed(1)}
                   </span>
                 </div>
                 <div style={{ height: 6, background: "var(--gray-100)", borderRadius: 4, overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${(s.avg / 7) * 100}%`, background: scoreColor(s.avg), borderRadius: 4, opacity: 0.75 }} />
+                  <div style={{ height: "100%", width: `${(display / 7) * 100}%`, background: barColor, borderRadius: 4, opacity: 0.75 }} />
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
